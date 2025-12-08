@@ -114,7 +114,7 @@ class GrokProvider: AIProvider {
         let apiKey = settings.apiKey ?? Environment.get("GROK_API_KEY")
         
         guard let key = apiKey else {
-            throw Abort(.internalServerError, reason: "GROK_API_KEY not set in settings or environment")
+            throw Abort(.internalServerError, reason: "Grok API key not found in settings or GROK_API_KEY environment variable")
         }
         
         let contextString = context.isEmpty ? "" : "\nContext: " + context.joined(separator: "\n")
@@ -149,7 +149,7 @@ class OpenAIProvider: AIProvider {
         let apiKey = settings.apiKey ?? Environment.get("OPENAI_API_KEY")
         
         guard let key = apiKey else {
-            throw Abort(.internalServerError, reason: "OPENAI_API_KEY not set in settings or environment")
+            throw Abort(.internalServerError, reason: "OpenAI API key not found in settings or OPENAI_API_KEY environment variable")
         }
         
         let contextString = context.isEmpty ? "" : "\nContext: " + context.joined(separator: "\n")

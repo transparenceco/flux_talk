@@ -252,7 +252,7 @@ body {
 .form-group input[type="range"] {
   padding: 0;
   height: 6px;
-  background: linear-gradient(to right, #007aff 0%, #007aff var(--range-progress, 35%), #ddd var(--range-progress, 35%), #ddd 100%);
+  background: #ddd;
   outline: none;
   -webkit-appearance: none;
 }

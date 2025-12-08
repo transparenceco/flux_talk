@@ -68,8 +68,8 @@ function SettingsModal({ currentMode, onClose, onModeChange, onHistoryCleared })
         apiService.setSetting('openai_model', openaiModel),
         apiService.setSetting('local_base_url', localBaseUrl),
         apiService.setSetting('use_context', useContextByDefault.toString()),
-        grokApiKey ? apiService.setSetting('grok_api_key', grokApiKey) : Promise.resolve(),
-        openaiApiKey ? apiService.setSetting('openai_api_key', openaiApiKey) : Promise.resolve(),
+        apiService.setSetting('grok_api_key', grokApiKey),
+        apiService.setSetting('openai_api_key', openaiApiKey),
       ]);
       alert('AI settings saved successfully!');
     } catch (err) {

@@ -178,13 +178,8 @@ struct SettingsView: View {
             try await APIService.shared.setSetting(key: "openai_model", value: openaiModel)
             try await APIService.shared.setSetting(key: "local_base_url", value: localBaseUrl)
             try await APIService.shared.setSetting(key: "use_context", value: String(useContextByDefault))
-            
-            if !grokApiKey.isEmpty {
-                try await APIService.shared.setSetting(key: "grok_api_key", value: grokApiKey)
-            }
-            if !openaiApiKey.isEmpty {
-                try await APIService.shared.setSetting(key: "openai_api_key", value: openaiApiKey)
-            }
+            try await APIService.shared.setSetting(key: "grok_api_key", value: grokApiKey)
+            try await APIService.shared.setSetting(key: "openai_api_key", value: openaiApiKey)
             
             // Show success alert
             print("AI settings saved successfully")
