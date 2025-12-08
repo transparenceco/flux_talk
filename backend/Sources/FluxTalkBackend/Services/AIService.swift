@@ -111,7 +111,7 @@ class GrokProvider: AIProvider {
     
     func chat(message: String, context: [String], settings: AISettings) async throws -> String {
         let baseURL = settings.baseURL ?? "https://api.x.ai/v1"
-        let apiKey = settings.apiKey ?? Environment.get("GROK_API_KEY")
+        let apiKey = (settings.apiKey?.isEmpty == false ? settings.apiKey : nil) ?? Environment.get("GROK_API_KEY")
         
         guard let key = apiKey else {
             throw Abort(.internalServerError, reason: "Grok API key not found in settings or GROK_API_KEY environment variable")
@@ -146,7 +146,7 @@ class OpenAIProvider: AIProvider {
     
     func chat(message: String, context: [String], settings: AISettings) async throws -> String {
         let baseURL = settings.baseURL ?? "https://api.openai.com/v1"
-        let apiKey = settings.apiKey ?? Environment.get("OPENAI_API_KEY")
+        let apiKey = (settings.apiKey?.isEmpty == false ? settings.apiKey : nil) ?? Environment.get("OPENAI_API_KEY")
         
         guard let key = apiKey else {
             throw Abort(.internalServerError, reason: "OpenAI API key not found in settings or OPENAI_API_KEY environment variable")
