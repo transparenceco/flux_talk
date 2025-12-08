@@ -11,12 +11,21 @@ class VectorDBService {
     
     // Initialize collection if needed
     func ensureCollection() async throws {
-        let response = try await app.client.post(URI(string: "\(chromaURL)/api/v1/collections")) { req in
-            try req.content.encode([
-                "name": collectionName,
-                "metadata": ["description": "Flux Talk context storage"]
-            ])
+        struct CollectionRequest: Content {
+            let name: String
+            let metadata: [String: String]
         }
+        
+        let collectionReq = CollectionRequest(
+            name: collectionName,
+            metadata: ["description": "Flux Talk context storage"]
+        )
+        
+        _ = try await app.client.post(
+            URI(string: "\(chromaURL)/api/v1/collections"),
+            headers: [:],
+            content: collectionReq
+        )
         // Ignore if collection already exists (409 conflict)
     }
     
@@ -24,42 +33,57 @@ class VectorDBService {
     func addContent(id: String, content: String, metadata: [String: String]?) async throws {
         let embedding = try await generateEmbedding(text: content)
         
-        let requestBody: [String: Any] = [
-            "ids": [id],
-            "embeddings": [embedding],
-            "documents": [content],
-            "metadatas": [metadata ?? [:]]
-        ]
-        
-        _ = try await app.client.post(URI(string: "\(chromaURL)/api/v1/collections/\(collectionName)/add")) { req in
-            try req.content.encode(requestBody, as: .json)
+        struct AddRequest: Content {
+            let ids: [String]
+            let embeddings: [[Double]]
+            let documents: [String]
+            let metadatas: [[String: String]]
         }
+        
+        let requestBody = AddRequest(
+            ids: [id],
+            embeddings: [embedding],
+            documents: [content],
+            metadatas: [metadata ?? [:]]
+        )
+        
+        _ = try await app.client.post(
+            URI(string: "\(chromaURL)/api/v1/collections/\(collectionName)/add"),
+            headers: [:],
+            content: requestBody
+        )
     }
     
     // Search for relevant context
     func search(query: String, limit: Int = 3) async throws -> [VectorResult] {
         let embedding = try await generateEmbedding(text: query)
         
-        let requestBody: [String: Any] = [
-            "query_embeddings": [embedding],
-            "n_results": limit
-        ]
-        
-        let response = try await app.client.post(URI(string: "\(chromaURL)/api/v1/collections/\(collectionName)/query")) { req in
-            try req.content.encode(requestBody, as: .json)
+        struct SearchRequest: Content {
+            let query_embeddings: [[Double]]
+            let n_results: Int
         }
+        
+        let requestBody = SearchRequest(
+            query_embeddings: [embedding],
+            n_results: limit
+        )
+        
+        let response = try await app.client.post(
+            URI(string: "\(chromaURL)/api/v1/collections/\(collectionName)/query"),
+            headers: [:],
+            content: requestBody
+        )
         
         let searchResponse = try response.content.decode(ChromaSearchResponse.self)
         
         var results: [VectorResult] = []
         if let documents = searchResponse.documents?.first,
-           let distances = searchResponse.distances?.first,
-           let metadatas = searchResponse.metadatas?.first {
+           let distances = searchResponse.distances?.first {
             for i in 0..<documents.count {
                 results.append(VectorResult(
                     content: documents[i],
                     distance: distances[i],
-                    metadata: metadatas[i] as? [String: String]
+                    metadata: nil  // Simplified for MVP
                 ))
             }
         }
@@ -72,10 +96,17 @@ class VectorDBService {
         // For MVP, we'll try to use LM Studio's embedding endpoint
         // If not available, fall back to a simple word-based embedding
         do {
-            let requestBody = ["input": text, "model": "text-embedding-ada-002"]
-            let response = try await app.client.post(URI(string: "http://localhost:1234/v1/embeddings")) { req in
-                try req.content.encode(requestBody)
+            struct EmbeddingRequest: Content {
+                let input: String
+                let model: String
             }
+            
+            let requestBody = EmbeddingRequest(input: text, model: "text-embedding-ada-002")
+            let response = try await app.client.post(
+                URI(string: "http://localhost:1234/v1/embeddings"),
+                headers: [:],
+                content: requestBody
+            )
             let embeddingResponse = try response.content.decode(EmbeddingResponse.self)
             return embeddingResponse.data.first?.embedding ?? generateSimpleEmbedding(text: text)
         } catch {
@@ -105,11 +136,13 @@ class VectorDBService {
     }
 }
 
-struct ChromaSearchResponse: Content {
+// Simplified metadata handling - Chroma returns nested arrays
+struct ChromaSearchResponse: Decodable {
     let ids: [[String]]?
     let documents: [[String]]?
     let distances: [[Double]]?
-    let metadatas: [[Any]]?
+    // We'll skip metadatas decoding for MVP to avoid complexity
+    // let metadatas: [[String: String]]?
 }
 
 struct EmbeddingResponse: Content {

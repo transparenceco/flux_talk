@@ -9,10 +9,15 @@ struct FluxTalkBackend {
         try LoggingSystem.bootstrap(from: &env)
         
         let app = try await Application.make(env)
-        defer { app.shutdown() }
         
-        try await configure(app)
-        try await app.execute()
+        do {
+            try await configure(app)
+            try await app.execute()
+            try await app.asyncShutdown()
+        } catch {
+            try await app.asyncShutdown()
+            throw error
+        }
     }
 }
 
