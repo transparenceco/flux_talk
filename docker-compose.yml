@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Chroma vector database
+  chroma:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+
+  # Vapor backend (requires building first)
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - GROK_API_KEY=${GROK_API_KEY}
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #   depends_on:
+  #     - chroma
+  #   volumes:
+  #     - ./backend:/app
+
+volumes:
+  chroma-data:

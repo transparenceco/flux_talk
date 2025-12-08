@@ -1,0 +1,24 @@
+# Backend
+backend/flux_talk.sqlite
+backend/.build/
+backend/Package.resolved
+
+# iOS
+ios-app/.build/
+ios-app/.swiftpm/
+ios-app/Package.resolved
+ios-app/*.xcodeproj
+ios-app/*.xcworkspace
+ios-app/xcuserdata/
+ios-app/DerivedData/
+
+# Web
+web-app/node_modules/
+web-app/dist/
+web-app/.vite/
+web-app/package-lock.json
+
+# General
+.DS_Store
+*.log
+.env

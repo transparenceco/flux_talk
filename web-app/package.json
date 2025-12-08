@@ -1,0 +1,22 @@
+{
+  "name": "flux-talk-web",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Flux Talk Web Interface",
+  "dependencies": {
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.2",
+    "vite": "^7.2.7"
+  }
+}
