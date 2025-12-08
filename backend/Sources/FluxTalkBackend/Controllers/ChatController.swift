@@ -18,6 +18,10 @@ struct ChatController: RouteCollection {
             .first()
         let mode = modeSetting?.value ?? "local"
         
+        // Get AI settings for the current mode
+        let aiService = AIService(app: req.application)
+        let aiSettings = try await aiService.getSettings(on: req.db, for: mode)
+        
         // Get context from vector DB if requested
         var context: [String] = []
         if chatRequest.useContext ?? true {
@@ -27,9 +31,8 @@ struct ChatController: RouteCollection {
         }
         
         // Get AI response
-        let aiService = AIService(app: req.application)
         let provider = aiService.getProvider(mode: mode)
-        let response = try await provider.chat(message: chatRequest.message, context: context)
+        let response = try await provider.chat(message: chatRequest.message, context: context, settings: aiSettings)
         
         // Save user message
         let userMessage = Message(role: "user", content: chatRequest.message, provider: mode)

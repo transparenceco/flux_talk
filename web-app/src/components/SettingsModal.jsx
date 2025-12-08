@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
 function SettingsModal({ currentMode, onClose, onModeChange, onHistoryCleared }) {
@@ -6,12 +6,48 @@ function SettingsModal({ currentMode, onClose, onModeChange, onHistoryCleared })
   const [knowledgeContent, setKnowledgeContent] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  
+  // AI Settings
+  const [temperature, setTemperature] = useState(0.7);
+  const [localModel, setLocalModel] = useState('local-model');
+  const [grokModel, setGrokModel] = useState('grok-beta');
+  const [openaiModel, setOpenaiModel] = useState('gpt-4');
+  const [grokApiKey, setGrokApiKey] = useState('');
+  const [openaiApiKey, setOpenaiApiKey] = useState('');
+  const [localBaseUrl, setLocalBaseUrl] = useState('http://localhost:1234/v1');
+  const [useContextByDefault, setUseContextByDefault] = useState(true);
 
   const modes = [
     { value: 'local', label: 'Local' },
     { value: 'grok', label: 'Grok' },
     { value: 'openai', label: 'OpenAI' },
   ];
+
+  // Load settings on mount
+  useEffect(() => {
+    loadAISettings();
+  }, []);
+
+  const loadAISettings = async () => {
+    try {
+      const settings = await apiService.getSettings();
+      const settingsMap = settings.reduce((acc, s) => {
+        acc[s.key] = s.value;
+        return acc;
+      }, {});
+
+      setTemperature(parseFloat(settingsMap.temperature || '0.7'));
+      setLocalModel(settingsMap.local_model || 'local-model');
+      setGrokModel(settingsMap.grok_model || 'grok-beta');
+      setOpenaiModel(settingsMap.openai_model || 'gpt-4');
+      setGrokApiKey(settingsMap.grok_api_key || '');
+      setOpenaiApiKey(settingsMap.openai_api_key || '');
+      setLocalBaseUrl(settingsMap.local_base_url || 'http://localhost:1234/v1');
+      setUseContextByDefault(settingsMap.use_context === 'true');
+    } catch (err) {
+      console.error('Failed to load AI settings:', err);
+    }
+  };
 
   const handleSaveMode = async () => {
     try {
@@ -20,6 +56,24 @@ function SettingsModal({ currentMode, onClose, onModeChange, onHistoryCleared })
       alert('Mode saved successfully!');
     } catch (err) {
       alert('Failed to save mode: ' + err.message);
+    }
+  };
+
+  const handleSaveAISettings = async () => {
+    try {
+      await Promise.all([
+        apiService.setSetting('temperature', temperature.toString()),
+        apiService.setSetting('local_model', localModel),
+        apiService.setSetting('grok_model', grokModel),
+        apiService.setSetting('openai_model', openaiModel),
+        apiService.setSetting('local_base_url', localBaseUrl),
+        apiService.setSetting('use_context', useContextByDefault.toString()),
+        grokApiKey ? apiService.setSetting('grok_api_key', grokApiKey) : Promise.resolve(),
+        openaiApiKey ? apiService.setSetting('openai_api_key', openaiApiKey) : Promise.resolve(),
+      ]);
+      alert('AI settings saved successfully!');
+    } catch (err) {
+      alert('Failed to save AI settings: ' + err.message);
     }
   };
 
@@ -82,6 +136,109 @@ function SettingsModal({ currentMode, onClose, onModeChange, onHistoryCleared })
           </div>
           <button className="btn btn-primary" onClick={handleSaveMode} style={{ marginTop: '1rem' }}>
             Save Mode
+          </button>
+        </div>
+
+        <div className="modal-section">
+          <h3>AI Configuration</h3>
+          
+          <div className="form-group">
+            <label>
+              Temperature: {temperature.toFixed(2)}
+              <small style={{ display: 'block', color: '#666', marginBottom: '0.5rem' }}>
+                Controls randomness (0 = focused, 2 = creative)
+              </small>
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="2"
+              step="0.1"
+              value={temperature}
+              onChange={(e) => setTemperature(parseFloat(e.target.value))}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          {mode === 'local' && (
+            <>
+              <div className="form-group">
+                <label>LM Studio Base URL</label>
+                <input
+                  type="text"
+                  value={localBaseUrl}
+                  onChange={(e) => setLocalBaseUrl(e.target.value)}
+                  placeholder="http://localhost:1234/v1"
+                />
+              </div>
+              <div className="form-group">
+                <label>Model Name</label>
+                <input
+                  type="text"
+                  value={localModel}
+                  onChange={(e) => setLocalModel(e.target.value)}
+                  placeholder="local-model"
+                />
+              </div>
+            </>
+          )}
+
+          {mode === 'grok' && (
+            <>
+              <div className="form-group">
+                <label>Grok API Key</label>
+                <input
+                  type="password"
+                  value={grokApiKey}
+                  onChange={(e) => setGrokApiKey(e.target.value)}
+                  placeholder="Enter your Grok API key"
+                />
+              </div>
+              <div className="form-group">
+                <label>Model</label>
+                <select value={grokModel} onChange={(e) => setGrokModel(e.target.value)}>
+                  <option value="grok-beta">grok-beta</option>
+                  <option value="grok-vision-beta">grok-vision-beta</option>
+                </select>
+              </div>
+            </>
+          )}
+
+          {mode === 'openai' && (
+            <>
+              <div className="form-group">
+                <label>OpenAI API Key</label>
+                <input
+                  type="password"
+                  value={openaiApiKey}
+                  onChange={(e) => setOpenaiApiKey(e.target.value)}
+                  placeholder="Enter your OpenAI API key"
+                />
+              </div>
+              <div className="form-group">
+                <label>Model</label>
+                <select value={openaiModel} onChange={(e) => setOpenaiModel(e.target.value)}>
+                  <option value="gpt-4">GPT-4</option>
+                  <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                  <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                </select>
+              </div>
+            </>
+          )}
+
+          <div className="form-group">
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input
+                type="checkbox"
+                checked={useContextByDefault}
+                onChange={(e) => setUseContextByDefault(e.target.checked)}
+              />
+              Use vector database context by default
+            </label>
+          </div>
+
+          <button className="btn btn-primary" onClick={handleSaveAISettings}>
+            Save AI Settings
           </button>
         </div>
 
