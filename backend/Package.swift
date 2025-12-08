@@ -8,6 +8,9 @@ let package = Package(
     platforms: [
         .macOS(.v13)
     ],
+    products: [
+        .executable(name: "FluxTalkBackend", targets: ["FluxTalkBackend"])
+    ],
     dependencies: [
         // Vapor framework
         .package(url: "https://github.com/vapor/vapor.git", from: "4.99.0"),
