@@ -109,6 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No request rate limiting
 - Simple embedding fallback (not production-grade)
 - Chroma integration optional (falls back gracefully)
+- Backend uses Swift 5.9 for Vapor compatibility (iOS uses Swift 6.0)
 
 ### Future Enhancements (Roadmap)
 - [ ] User authentication and authorization

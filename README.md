@@ -48,7 +48,8 @@ A hybrid AI chatbot application designed for quick, private, and flexible intera
 ## Prerequisites
 
 ### Required
-- Swift 6.0+ (for backend and iOS)
+- Swift 5.9+ (for backend - uses Swift 5.9 for Vapor compatibility)
+- Swift 6.0+ (for iOS app development)
 - Node.js 18+ (for web frontend)
 - LM Studio (for local AI mode) - https://lmstudio.ai/
 
