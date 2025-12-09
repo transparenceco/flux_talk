@@ -2,15 +2,28 @@ import Vapor
 
 class VectorDBService {
     private let app: Application
-    private let chromaURL = "http://127.0.0.1:8000"
+    private let chromaURL: String
     private let collectionName = "flux_talk_context"
+    private var cachedCollectionId: String?
     
     init(app: Application) {
         self.app = app
+        self.chromaURL = Environment.get("CHROMA_URL") ?? "http://127.0.0.1:8000"
     }
     
-    // Initialize collection if needed
-    func ensureCollection() async throws {
+    // Create or fetch the collection and return its id
+    private func ensureCollection() async throws -> String {
+        if let cachedCollectionId {
+            return cachedCollectionId
+        }
+        
+        // Try to find existing collection by name
+        if let existingId = try await fetchCollectionId() {
+            cachedCollectionId = existingId
+            return existingId
+        }
+        
+        // Otherwise create it
         struct CollectionRequest: Content {
             let name: String
             let metadata: [String: String]?
@@ -21,23 +34,48 @@ class VectorDBService {
             metadata: ["description": "Flux Talk context storage"]
         )
         
-        do {
-            _ = try await app.client.post(
-                URI(string: "\(chromaURL)/api/v2/collections"),
-                headers: [:],
-                content: collectionReq
-            )
-        } catch {
-            // Collection might already exist, try to get it
-            _ = try? await app.client.get(
-                URI(string: "\(chromaURL)/api/v2/collections/\(collectionName)")
-            )
+        let createResponse = try await app.client.post(
+            URI(string: "\(chromaURL)/api/v1/collections")
+        ) { req in
+            try req.content.encode(collectionReq)
         }
+        
+        if let collection = try? createResponse.content.decode(ChromaCollectionResponse.self).collection {
+            cachedCollectionId = collection.id
+            return collection.id
+        }
+        
+        // If creation failed (maybe already exists), try one more fetch
+        if let fallbackId = try await fetchCollectionId() {
+            cachedCollectionId = fallbackId
+            return fallbackId
+        }
+        
+        throw Abort(.internalServerError, reason: "Unable to initialize Chroma collection")
+    }
+    
+    private func fetchCollectionId() async throws -> String? {
+        let encodedName = collectionName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? collectionName
+        let uri = URI(string: "\(chromaURL)/api/v1/collections?name=\(encodedName)")
+        let response = try await app.client.get(uri)
+        
+        // Primary response shape: { "collection": { ... } }
+        if let collection = try? response.content.decode(ChromaCollectionResponse.self).collection {
+            return collection.id
+        }
+        
+        // Alternative response shape: { "collections": [ { ... } ] }
+        if let collections = try? response.content.decode(ChromaCollectionsResponse.self).collections {
+            return collections.first(where: { $0.name == collectionName })?.id
+        }
+        
+        return nil
     }
     
     // Add content to vector DB
     func addContent(id: String, content: String, metadata: [String: String]?) async throws {
         let embedding = try await generateEmbedding(text: content)
+        let collectionId = try await ensureCollection()
         
         struct AddRequest: Content {
             let ids: [String]
@@ -55,7 +93,7 @@ class VectorDBService {
         
         do {
             _ = try await app.client.post(
-                URI(string: "\(chromaURL)/api/v2/collections/\(collectionName)/add")
+                URI(string: "\(chromaURL)/api/v1/collections/\(collectionId)/add")
             ) { req in
                 try req.content.encode(requestBody)
             }
@@ -67,6 +105,7 @@ class VectorDBService {
     // Search for relevant context
     func search(query: String, limit: Int = 3) async throws -> [VectorResult] {
         let embedding = try await generateEmbedding(text: query)
+        let collectionId = try await ensureCollection()
         
         struct SearchRequest: Content {
             let query_embeddings: [[Double]]
@@ -80,7 +119,7 @@ class VectorDBService {
         
         do {
             let response = try await app.client.post(
-                URI(string: "\(chromaURL)/api/v2/collections/\(collectionName)/query")
+                URI(string: "\(chromaURL)/api/v1/collections/\(collectionId)/query")
             ) { req in
                 try req.content.encode(requestBody)
             }
@@ -140,6 +179,20 @@ struct ChromaSearchResponse: Decodable {
     let distances: [[Double]]?
     // We'll skip metadatas decoding for MVP to avoid complexity
     // let metadatas: [[String: String]]?
+}
+
+struct ChromaCollectionResponse: Decodable {
+    let collection: ChromaCollection
+}
+
+struct ChromaCollectionsResponse: Decodable {
+    let collections: [ChromaCollection]?
+}
+
+struct ChromaCollection: Decodable {
+    let id: String
+    let name: String?
+    let metadata: [String: String]?
 }
 
 struct EmbeddingResponse: Content {

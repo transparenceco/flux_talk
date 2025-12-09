@@ -129,7 +129,12 @@ pip install chromadb
 
 # Run Chroma server
 chroma run --host localhost --port 8000
+
+# If your Chroma server runs elsewhere
+export CHROMA_URL=http://localhost:8000
 ```
+
+The backend will automatically create the `flux_talk_context` collection the first time you add or search knowledge. The Chroma REST API used is `api/v1`, so make sure you're on a recent Chroma release (`chroma --version`).
 
 ## Usage
 
