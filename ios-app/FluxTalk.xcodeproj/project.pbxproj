@@ -7,97 +7,97 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F1000001000000000000001 /* FluxTalkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000002000000000000001 /* FluxTalkApp.swift */; };
-		F1000003000000000000001 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000004000000000000001 /* ChatView.swift */; };
-		F1000005000000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000006000000000000001 /* SettingsView.swift */; };
-		F1000007000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1000008000000000000001 /* Assets.xcassets */; };
-		F1000009000000000000001 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000010000000000000001 /* ChatViewModel.swift */; };
-		F1000011000000000000001 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000012000000000000001 /* APIService.swift */; };
-		F1000013000000000000001 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000014000000000000001 /* Models.swift */; };
-		F1000015000000000000001 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = F1000016000000000000001 /* ExyteChat */; };
+		FA0000010000000000000001 /* FluxTalkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000020000000000000001 /* FluxTalkApp.swift */; };
+		FA0000030000000000000001 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000040000000000000001 /* ChatView.swift */; };
+		FA0000050000000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000060000000000000001 /* SettingsView.swift */; };
+		FA0000070000000000000001 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000080000000000000001 /* ChatViewModel.swift */; };
+		FA0000090000000000000001 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000A0000000000000001 /* APIService.swift */; };
+		FA00000B0000000000000001 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000C0000000000000001 /* Models.swift */; };
+		FA00000D0000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000E0000000000000001 /* Assets.xcassets */; };
+		FA00000F0000000000000001 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = FA0000100000000000000001 /* ExyteChat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F1000000000000000000001 /* FluxTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FluxTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1000002000000000000001 /* FluxTalkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluxTalkApp.swift; sourceTree = "<group>"; };
-		F1000004000000000000001 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		F1000006000000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		F1000008000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F1000010000000000000001 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
-		F1000012000000000000001 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
-		F1000014000000000000001 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		FA0000110000000000000001 /* FluxTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FluxTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA0000020000000000000001 /* FluxTalkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluxTalkApp.swift; sourceTree = "<group>"; };
+		FA0000040000000000000001 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		FA0000060000000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FA0000080000000000000001 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		FA00000A0000000000000001 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		FA00000C0000000000000001 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		FA00000E0000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		F1FFFFFF000000000000001 /* Frameworks */ = {
+		FA0000120000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1000015000000000000001 /* ExyteChat in Frameworks */,
+				FA00000F0000000000000001 /* ExyteChat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F1FFFFFE000000000000001 = {
+		FA0000130000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				F1000017000000000000001 /* FluxTalk */,
-				F1FFFFD000000000000001 /* Products */,
+				FA0000140000000000000001 /* FluxTalk */,
+				FA0000150000000000000001 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		F1FFFFD000000000000001 /* Products */ = {
+		FA0000140000000000000001 /* FluxTalk */ = {
 			isa = PBXGroup;
 			children = (
-				F1000000000000000000001 /* FluxTalk.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F1000017000000000000001 /* FluxTalk */ = {
-			isa = PBXGroup;
-			children = (
-				F1000002000000000000001 /* FluxTalkApp.swift */,
-				F1000018000000000000001 /* Views */,
-				F1000019000000000000001 /* ViewModels */,
-				F1000020000000000000001 /* Services */,
-				F1000021000000000000001 /* Models */,
-				F1000008000000000000001 /* Assets.xcassets */,
+				FA0000020000000000000001 /* FluxTalkApp.swift */,
+				FA0000160000000000000001 /* Views */,
+				FA0000170000000000000001 /* ViewModels */,
+				FA0000180000000000000001 /* Services */,
+				FA0000190000000000000001 /* Models */,
+				FA00000E0000000000000001 /* Assets.xcassets */,
 			);
 			path = FluxTalk;
 			sourceTree = "<group>";
 		};
-		F1000018000000000000001 /* Views */ = {
+		FA0000150000000000000001 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F1000004000000000000001 /* ChatView.swift */,
-				F1000006000000000000001 /* SettingsView.swift */,
+				FA0000110000000000000001 /* FluxTalk.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA0000160000000000000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FA0000040000000000000001 /* ChatView.swift */,
+				FA0000060000000000000001 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		F1000019000000000000001 /* ViewModels */ = {
+		FA0000170000000000000001 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				F1000010000000000000001 /* ChatViewModel.swift */,
+				FA0000080000000000000001 /* ChatViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		F1000020000000000000001 /* Services */ = {
+		FA0000180000000000000001 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				F1000012000000000000001 /* APIService.swift */,
+				FA00000A0000000000000001 /* APIService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
 		};
-		F1000021000000000000001 /* Models */ = {
+		FA0000190000000000000001 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F1000014000000000000001 /* Models.swift */,
+				FA00000C0000000000000001 /* Models.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -105,13 +105,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F1FFFFFD000000000000001 /* FluxTalk */ = {
+		FA00001A0000000000000001 /* FluxTalk */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F1FFFFFC000000000000001 /* Build configuration list for PBXNativeTarget "FluxTalk" */;
+			buildConfigurationList = FA00001B0000000000000001 /* Build configuration list for PBXNativeTarget "FluxTalk" */;
 			buildPhases = (
-				F1FFFFFA000000000000001 /* Sources */,
-				F1FFFFFF000000000000001 /* Frameworks */,
-				F1FFFFFB000000000000001 /* Resources */,
+				FA00001C0000000000000001 /* Sources */,
+				FA0000120000000000000001 /* Frameworks */,
+				FA00001D0000000000000001 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -119,28 +119,28 @@
 			);
 			name = FluxTalk;
 			packageProductDependencies = (
-				F1000016000000000000001 /* ExyteChat */,
+				FA0000100000000000000001 /* ExyteChat */,
 			);
 			productName = FluxTalk;
-			productReference = F1000000000000000000001 /* FluxTalk.app */;
+			productReference = FA0000110000000000000001 /* FluxTalk.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		F1FFFFFF000000000000000 /* Project object */ = {
+		FA00001E0000000000000001 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					F1FFFFFD000000000000001 = {
+					FA00001A0000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = F1FFFFFE000000000000000 /* Build configuration list for PBXProject "FluxTalk" */;
+			buildConfigurationList = FA00001F0000000000000001 /* Build configuration list for PBXProject "FluxTalk" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -148,48 +148,48 @@
 				en,
 				Base,
 			);
-			mainGroup = F1FFFFFE000000000000001;
+			mainGroup = FA0000130000000000000001;
 			packageReferences = (
-				F1000022000000000000001 /* XCRemoteSwiftPackageReference "Chat" */,
+				FA0000200000000000000001 /* XCRemoteSwiftPackageReference "Chat" */,
 			);
-			productRefGroup = F1FFFFD000000000000001 /* Products */;
+			productRefGroup = FA0000150000000000000001 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F1FFFFFD000000000000001 /* FluxTalk */,
+				FA00001A0000000000000001 /* FluxTalk */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		F1FFFFFB000000000000001 /* Resources */ = {
+		FA00001D0000000000000001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1000007000000000000001 /* Assets.xcassets in Resources */,
+				FA00000D0000000000000001 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		F1FFFFFA000000000000001 /* Sources */ = {
+		FA00001C0000000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1000001000000000000001 /* FluxTalkApp.swift in Sources */,
-				F1000003000000000000001 /* ChatView.swift in Sources */,
-				F1000005000000000000001 /* SettingsView.swift in Sources */,
-				F1000009000000000000001 /* ChatViewModel.swift in Sources */,
-				F1000011000000000000001 /* APIService.swift in Sources */,
-				F1000013000000000000001 /* Models.swift in Sources */,
+				FA0000010000000000000001 /* FluxTalkApp.swift in Sources */,
+				FA0000030000000000000001 /* ChatView.swift in Sources */,
+				FA0000050000000000000001 /* SettingsView.swift in Sources */,
+				FA0000070000000000000001 /* ChatViewModel.swift in Sources */,
+				FA0000090000000000000001 /* APIService.swift in Sources */,
+				FA00000B0000000000000001 /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		F1FFFFFA000000000000000 /* Debug */ = {
+		FA0000210000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -252,7 +252,7 @@
 			};
 			name = Debug;
 		};
-		F1FFFFFB000000000000000 /* Release */ = {
+		FA0000220000000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -308,7 +308,7 @@
 			};
 			name = Release;
 		};
-		F1FFFFFD000000000000000 /* Debug */ = {
+		FA0000230000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -321,14 +321,14 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.transparenceco.FluxTalk;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fluxtalk.FluxTalk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
@@ -336,7 +336,7 @@
 			};
 			name = Debug;
 		};
-		F1FFFFFE000000000000000 /* Release */ = {
+		FA0000240000000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -349,14 +349,14 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.transparenceco.FluxTalk;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fluxtalk.FluxTalk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
@@ -367,20 +367,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F1FFFFFE000000000000000 /* Build configuration list for PBXProject "FluxTalk" */ = {
+		FA00001B0000000000000001 /* Build configuration list for PBXNativeTarget "FluxTalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F1FFFFFA000000000000000 /* Debug */,
-				F1FFFFFB000000000000000 /* Release */,
+				FA0000230000000000000001 /* Debug */,
+				FA0000240000000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F1FFFFFC000000000000001 /* Build configuration list for PBXNativeTarget "FluxTalk" */ = {
+		FA00001F0000000000000001 /* Build configuration list for PBXProject "FluxTalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F1FFFFFD000000000000000 /* Debug */,
-				F1FFFFFE000000000000000 /* Release */,
+				FA0000210000000000000001 /* Debug */,
+				FA0000220000000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -388,23 +388,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F1000022000000000000001 /* XCRemoteSwiftPackageReference "Chat" */ = {
+		FA0000200000000000000001 /* XCRemoteSwiftPackageReference "Chat" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/Chat.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
+				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F1000016000000000000001 /* ExyteChat */ = {
+		FA0000100000000000000001 /* ExyteChat */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F1000022000000000000001 /* XCRemoteSwiftPackageReference "Chat" */;
+			package = FA0000200000000000000001 /* XCRemoteSwiftPackageReference "Chat" */;
 			productName = ExyteChat;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = F1FFFFFF000000000000000 /* Project object */;
+	rootObject = FA00001E0000000000000001 /* Project object */;
 }
