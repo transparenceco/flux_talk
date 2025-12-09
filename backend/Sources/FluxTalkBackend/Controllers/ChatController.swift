@@ -25,14 +25,26 @@ struct ChatController: RouteCollection {
         // Get context from vector DB if requested
         var context: [String] = []
         if chatRequest.useContext ?? true {
-            let vectorDB = VectorDBService(app: req.application)
-            let results = try await vectorDB.search(query: chatRequest.message, limit: 3)
-            context = results.map { $0.content }
+            do {
+                let vectorDB = VectorDBService(app: req.application)
+                let results = try await vectorDB.search(query: chatRequest.message, limit: 3)
+                context = results.map { $0.content }
+            } catch {
+                // Vector DB might not be available, continue without context
+                req.logger.warning("Vector DB search failed: \(error)")
+            }
         }
         
-        // Get AI response
+        // Get AI response with error handling
         let provider = aiService.getProvider(mode: mode)
-        let response = try await provider.chat(message: chatRequest.message, context: context, settings: aiSettings)
+        let response: String
+        do {
+            response = try await provider.chat(message: chatRequest.message, context: context, settings: aiSettings)
+        } catch {
+            req.logger.error("AI service failed for mode '\(mode)': \(error)")
+            // Return a fallback response
+            response = "I'm sorry, but I'm currently unable to connect to the AI service (\(mode)). Please check that the service is running and properly configured. Error: \(error.localizedDescription)"
+        }
         
         // Save user message
         let userMessage = Message(role: "user", content: chatRequest.message, provider: mode)
