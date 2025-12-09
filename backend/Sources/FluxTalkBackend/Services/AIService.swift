@@ -2,7 +2,7 @@ import Vapor
 import Fluent
 
 protocol AIProvider {
-    func chat(message: String, context: [String], settings: AISettings) async throws -> String
+    func chat(message: String, context: [String], history: [String], settings: AISettings) async throws -> String
 }
 
 struct AISettings {
@@ -81,14 +81,35 @@ class LMStudioProvider: AIProvider {
         self.app = app
     }
     
-    func chat(message: String, context: [String], settings: AISettings) async throws -> String {
+    func chat(message: String, context: [String], history: [String], settings: AISettings) async throws -> String {
         let baseURL = settings.baseURL ?? "http://localhost:1234/v1"
-        let contextString = context.isEmpty ? "" : "\nContext: " + context.joined(separator: "\n")
-        let fullMessage = message + contextString
+        
+        // Build context string from vector DB results
+        let contextString = context.isEmpty ? "" : "\n\nKnowledge Base:\n" + context.joined(separator: "\n")
+        
+        let systemPrompt = "You are a helpful AI assistant. Remember and use all information shared with you in this conversation. Use the knowledge base when relevant to answer questions accurately." + contextString
+        
+        var messages: [OpenAIChatMessage] = []
+        messages.append(OpenAIChatMessage(role: "system", content: systemPrompt))
+        
+        // Add conversation history to maintain context
+        for historyMessage in history {
+            // Parse the "role: content" format
+            if let colonIndex = historyMessage.firstIndex(of: ":"), 
+               historyMessage.distance(from: historyMessage.startIndex, to: colonIndex) > 0 {
+                let roleStr = String(historyMessage[..<colonIndex]).trimmingCharacters(in: .whitespaces)
+                let content = String(historyMessage[historyMessage.index(after: colonIndex)...]).trimmingCharacters(in: .whitespaces)
+                let role = (roleStr == "user" || roleStr == "assistant") ? roleStr : "assistant"
+                messages.append(OpenAIChatMessage(role: role, content: content))
+            }
+        }
+        
+        // Add the current user message
+        messages.append(OpenAIChatMessage(role: "user", content: message))
         
         let requestBody = OpenAIChatRequest(
             model: settings.model,
-            messages: [OpenAIChatMessage(role: "user", content: fullMessage)],
+            messages: messages,
             temperature: settings.temperature
         )
         
@@ -109,7 +130,7 @@ class GrokProvider: AIProvider {
         self.app = app
     }
     
-    func chat(message: String, context: [String], settings: AISettings) async throws -> String {
+    func chat(message: String, context: [String], history: [String], settings: AISettings) async throws -> String {
         let baseURL = settings.baseURL ?? "https://api.x.ai/v1"
         let apiKey = (settings.apiKey?.isEmpty == false ? settings.apiKey : nil) ?? Environment.get("GROK_API_KEY")
         
@@ -117,12 +138,30 @@ class GrokProvider: AIProvider {
             throw Abort(.internalServerError, reason: "Grok API key not found in settings or GROK_API_KEY environment variable")
         }
         
-        let contextString = context.isEmpty ? "" : "\nContext: " + context.joined(separator: "\n")
-        let fullMessage = message + contextString
+        let contextString = context.isEmpty ? "" : "\n\nKnowledge Base:\n" + context.joined(separator: "\n")
+        let systemPrompt = "You are a helpful AI assistant. Remember and use all information shared with you in this conversation. Use the knowledge base when relevant to answer questions accurately." + contextString
+        
+        var messages: [OpenAIChatMessage] = []
+        messages.append(OpenAIChatMessage(role: "system", content: systemPrompt))
+        
+        // Add conversation history to maintain context
+        for historyMessage in history {
+            // Parse the "role: content" format
+            if let colonIndex = historyMessage.firstIndex(of: ":"), 
+               historyMessage.distance(from: historyMessage.startIndex, to: colonIndex) > 0 {
+                let roleStr = String(historyMessage[..<colonIndex]).trimmingCharacters(in: .whitespaces)
+                let content = String(historyMessage[historyMessage.index(after: colonIndex)...]).trimmingCharacters(in: .whitespaces)
+                let role = (roleStr == "user" || roleStr == "assistant") ? roleStr : "assistant"
+                messages.append(OpenAIChatMessage(role: role, content: content))
+            }
+        }
+        
+        // Add the current user message
+        messages.append(OpenAIChatMessage(role: "user", content: message))
         
         let requestBody = OpenAIChatRequest(
             model: settings.model,
-            messages: [OpenAIChatMessage(role: "user", content: fullMessage)],
+            messages: messages,
             temperature: settings.temperature
         )
         
@@ -144,7 +183,7 @@ class OpenAIProvider: AIProvider {
         self.app = app
     }
     
-    func chat(message: String, context: [String], settings: AISettings) async throws -> String {
+    func chat(message: String, context: [String], history: [String], settings: AISettings) async throws -> String {
         let baseURL = settings.baseURL ?? "https://api.openai.com/v1"
         let apiKey = (settings.apiKey?.isEmpty == false ? settings.apiKey : nil) ?? Environment.get("OPENAI_API_KEY")
         
@@ -152,12 +191,30 @@ class OpenAIProvider: AIProvider {
             throw Abort(.internalServerError, reason: "OpenAI API key not found in settings or OPENAI_API_KEY environment variable")
         }
         
-        let contextString = context.isEmpty ? "" : "\nContext: " + context.joined(separator: "\n")
-        let fullMessage = message + contextString
+        let contextString = context.isEmpty ? "" : "\n\nKnowledge Base:\n" + context.joined(separator: "\n")
+        let systemPrompt = "You are a helpful AI assistant. Remember and use all information shared with you in this conversation. Use the knowledge base when relevant to answer questions accurately." + contextString
+        
+        var messages: [OpenAIChatMessage] = []
+        messages.append(OpenAIChatMessage(role: "system", content: systemPrompt))
+        
+        // Add conversation history to maintain context
+        for historyMessage in history {
+            // Parse the "role: content" format
+            if let colonIndex = historyMessage.firstIndex(of: ":"), 
+               historyMessage.distance(from: historyMessage.startIndex, to: colonIndex) > 0 {
+                let roleStr = String(historyMessage[..<colonIndex]).trimmingCharacters(in: .whitespaces)
+                let content = String(historyMessage[historyMessage.index(after: colonIndex)...]).trimmingCharacters(in: .whitespaces)
+                let role = (roleStr == "user" || roleStr == "assistant") ? roleStr : "assistant"
+                messages.append(OpenAIChatMessage(role: role, content: content))
+            }
+        }
+        
+        // Add the current user message
+        messages.append(OpenAIChatMessage(role: "user", content: message))
         
         let requestBody = OpenAIChatRequest(
             model: settings.model,
-            messages: [OpenAIChatMessage(role: "user", content: fullMessage)],
+            messages: messages,
             temperature: settings.temperature
         )
         

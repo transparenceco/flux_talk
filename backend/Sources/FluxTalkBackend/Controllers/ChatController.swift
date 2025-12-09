@@ -29,17 +29,29 @@ struct ChatController: RouteCollection {
                 let vectorDB = VectorDBService(app: req.application)
                 let results = try await vectorDB.search(query: chatRequest.message, limit: 3)
                 context = results.map { $0.content }
+                if !context.isEmpty {
+                    req.logger.info("Found \(context.count) vector context results")
+                }
             } catch {
                 // Vector DB might not be available, continue without context
                 req.logger.warning("Vector DB search failed: \(error)")
             }
         }
         
+        // Get recent chat history for context (last 10 messages for better context)
+        let recentMessages = try await Message.query(on: req.db)
+            .sort(\.$createdAt, .descending)
+            .limit(10)
+            .all()
+        let history = recentMessages.reversed().map { msg in
+            "\(msg.role): \(msg.content)"
+        }
+        
         // Get AI response with error handling
         let provider = aiService.getProvider(mode: mode)
         let response: String
         do {
-            response = try await provider.chat(message: chatRequest.message, context: context, settings: aiSettings)
+            response = try await provider.chat(message: chatRequest.message, context: context, history: history, settings: aiSettings)
         } catch {
             req.logger.error("AI service failed for mode '\(mode)': \(error)")
             // Return a fallback response
