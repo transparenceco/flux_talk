@@ -3,7 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var viewModel: ChatViewModel
     @Environment(\.dismiss) private var dismiss
-    @State private var serverURL = APIService.shared.baseURL
+    @State private var serverURL = "http://localhost:8080"
     @State private var showClearConfirmation = false
     
     // AI Settings
@@ -145,6 +145,8 @@ struct SettingsView: View {
                 Text("Are you sure you want to clear all chat history? This cannot be undone.")
             }
             .task {
+                // Load current server URL
+                serverURL = APIService.shared.baseURL
                 await loadAISettings()
             }
         }

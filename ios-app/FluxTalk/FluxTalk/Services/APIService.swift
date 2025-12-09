@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 class APIService {
     static let shared = APIService()
     
