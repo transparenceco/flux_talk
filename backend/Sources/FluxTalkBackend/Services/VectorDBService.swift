@@ -2,7 +2,7 @@ import Vapor
 
 class VectorDBService {
     private let app: Application
-    private let chromaURL = "http://localhost:8000"
+    private let chromaURL = "http://127.0.0.1:8000"
     private let collectionName = "flux_talk_context"
     
     init(app: Application) {
@@ -13,7 +13,7 @@ class VectorDBService {
     func ensureCollection() async throws {
         struct CollectionRequest: Content {
             let name: String
-            let metadata: [String: String]
+            let metadata: [String: String]?
         }
         
         let collectionReq = CollectionRequest(
@@ -21,12 +21,18 @@ class VectorDBService {
             metadata: ["description": "Flux Talk context storage"]
         )
         
-        _ = try await app.client.post(
-            URI(string: "\(chromaURL)/api/v1/collections"),
-            headers: [:],
-            content: collectionReq
-        )
-        // Ignore if collection already exists (409 conflict)
+        do {
+            _ = try await app.client.post(
+                URI(string: "\(chromaURL)/api/v2/collections"),
+                headers: [:],
+                content: collectionReq
+            )
+        } catch {
+            // Collection might already exist, try to get it
+            _ = try? await app.client.get(
+                URI(string: "\(chromaURL)/api/v2/collections/\(collectionName)")
+            )
+        }
     }
     
     // Add content to vector DB
@@ -47,11 +53,15 @@ class VectorDBService {
             metadatas: [metadata ?? [:]]
         )
         
-        _ = try await app.client.post(
-            URI(string: "\(chromaURL)/api/v1/collections/\(collectionName)/add"),
-            headers: [:],
-            content: requestBody
-        )
+        do {
+            _ = try await app.client.post(
+                URI(string: "\(chromaURL)/api/v2/collections/\(collectionName)/add")
+            ) { req in
+                try req.content.encode(requestBody)
+            }
+        } catch {
+            throw error
+        }
     }
     
     // Search for relevant context
@@ -68,51 +78,38 @@ class VectorDBService {
             n_results: limit
         )
         
-        let response = try await app.client.post(
-            URI(string: "\(chromaURL)/api/v1/collections/\(collectionName)/query"),
-            headers: [:],
-            content: requestBody
-        )
-        
-        let searchResponse = try response.content.decode(ChromaSearchResponse.self)
-        
-        var results: [VectorResult] = []
-        if let documents = searchResponse.documents?.first,
-           let distances = searchResponse.distances?.first {
-            for i in 0..<documents.count {
-                results.append(VectorResult(
-                    content: documents[i],
-                    distance: distances[i],
-                    metadata: nil  // Simplified for MVP
-                ))
-            }
-        }
-        
-        return results
-    }
-    
-    // Simple embedding generation (using local LM Studio or a simple hash for MVP)
-    private func generateEmbedding(text: String) async throws -> [Double] {
-        // For MVP, we'll try to use LM Studio's embedding endpoint
-        // If not available, fall back to a simple word-based embedding
         do {
-            struct EmbeddingRequest: Content {
-                let input: String
-                let model: String
+            let response = try await app.client.post(
+                URI(string: "\(chromaURL)/api/v2/collections/\(collectionName)/query")
+            ) { req in
+                try req.content.encode(requestBody)
             }
             
-            let requestBody = EmbeddingRequest(input: text, model: "text-embedding-ada-002")
-            let response = try await app.client.post(
-                URI(string: "http://localhost:1234/v1/embeddings"),
-                headers: [:],
-                content: requestBody
-            )
-            let embeddingResponse = try response.content.decode(EmbeddingResponse.self)
-            return embeddingResponse.data.first?.embedding ?? generateSimpleEmbedding(text: text)
+            let searchResponse = try response.content.decode(ChromaSearchResponse.self)
+            
+            var results: [VectorResult] = []
+            if let documents = searchResponse.documents?.first,
+               let distances = searchResponse.distances?.first {
+                for i in 0..<documents.count {
+                    results.append(VectorResult(
+                        content: documents[i],
+                        distance: distances[i],
+                        metadata: nil
+                    ))
+                }
+            }
+            
+            return results
         } catch {
-            // Fallback to simple embedding
-            return generateSimpleEmbedding(text: text)
+            throw error
         }
+    }
+    
+    // Simple embedding generation (using simple hash for MVP)
+    private func generateEmbedding(text: String) async throws -> [Double] {
+        // Use simple deterministic embedding based on text
+        // This works without needing LM Studio or external services
+        return generateSimpleEmbedding(text: text)
     }
     
     // Simple fallback embedding based on word hashing (for MVP)
